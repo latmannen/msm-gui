@@ -38,7 +38,6 @@ class MoviesController < ApplicationController
 
     #Redirect the user back to /movies URL
 
-
   end
 
   def destroy
@@ -52,4 +51,27 @@ class MoviesController < ApplicationController
 
     redirect_to("/movies")
   end
+  def update
+    #Params look like this:
+    #  Parameters: {"title_field"=>"flubber 2", "the_year"=>"1000", "the_duration"=>"10", "the_description"=>"29", "the_image"=>"reddit.com", "the_director_id"=>"73", "the_id"=>"29"}
+    #get the ID out of params
+    m_id = params.fetch("the_id")
+    matching_records = Movie.where({ :id => m_id})
+    the_movie = matching_records.at(0)
+    
+    #look up the existing record
+    the_movie.title = params.fetch("title_field")
+    the_movie.year = params.fetch("the_year")
+    the_movie.duration = params.fetch("the_duration")
+    the_movie.description = params.fetch("the_description")
+    the_movie.image = params.fetch("the_image")
+    the_movie.director_id = params.fetch("the_director_id")
+    
+    #overwrite each column
+    #save
+    the_movie.save
+    #redirect to the movie details page
+    redirect_to("/movies/#{the_movie.id}")
+  end
+
 end
